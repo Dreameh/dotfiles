@@ -2,23 +2,25 @@
 ;;; Commentary:
 
 ;;; Code:
+
 (use-package lsp-java
-   :requires (lsp)
-   :hook (java-mode . lsp)
-   :config
-   (require 'dap-java))
+  :after (lsp-mode)
+  :hook (java-mode . lsp-deferred)
+  :config
+  (require 'dap-java))
 
- ;; For gradle build files
- (straight-use-package 'groovy-mode)
+;; For gradle build files
+(straight-use-package 'groovy-mode)
 
- ;; Gradle
- (use-package gradle-mode
-   :hook (java-mode . (lambda () (gradle-mode 1)))
-   :config
-   (defun build-and-run()
-     (interactive)
-     (gradle-run "build run"))
-   (define-key gradle-mode-map (kbd "C-c C-r") 'build-and-run))
+
+(defun build-and-run()
+  (interactive)
+  (gradle-run "build run"))
+
+;; Gradle
+(use-package gradle-mode
+  :bind ("C-c C-r" . build-and-run)
+  :hook (java-mode . (lambda () (gradle-mode 1))))
 
 (straight-use-package 'mvn)
 

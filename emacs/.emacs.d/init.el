@@ -64,6 +64,7 @@
     module-org
     module-markdown
     module-python
+    module-java
     module-web))
 
 (dolist (module dreameh--extra-modules)
