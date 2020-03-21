@@ -1,3 +1,7 @@
+#+TITLE: Guidelines
+#+AUTHOR: Lucas Pentinsaari
+#+STARTIP: overview
+
 * Dotfiles
   I sneaked the install script which takes care of stow [[https://github.com/kkhan01/dotfiles][here]] .
   These are all config files that I have dabbled with in the past, or
