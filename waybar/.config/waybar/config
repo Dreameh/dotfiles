@@ -1,0 +1,83 @@
+{
+	"layer": "top",
+	"height": 30,
+	"modules-left": ["sway/workspaces", "sway/mode", "network"],
+	"modules-center": ["sway/window"],
+	"modules-right": ["custom/spotify", "pulseaudio", "tray", "clock"],
+	"sway/workspaces": {
+      	"format": "{icon}",
+      	"format-icons": {
+          "1": "一", 
+          "2": "二", 
+          "3": "三", 
+          "4": "四", 
+          "5": "五", 
+          "6": "六", 
+          "7": "七", 
+          "8": "八", 
+          "9": "九", 
+          "10": "十"
+      	  },
+	  
+	  "sway/mode": {
+          "format": "<span style=\"italic\">{}</span>"
+    	  },
+      
+      "network": {
+      	"format-wifi": "{essid} ({signalStrength}%) ",
+      	"format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+	"format-linked": "{ifname} (No IP)",
+      	"format-disconnected": "Disconnected ⚠"
+      },
+      "pulseaudio": {
+      	"format": "{icon}",
+      	"format-alt": "{volume} {icon}",
+      	"format-alt-click": "click-right",
+      	"format-muted": "",
+      	"format-icons": {
+      	"phone": [" ", " ", " ", " "],
+      	"default": ["", "", "", ""]
+      	},
+      	"scroll-step": 10,
+      	"on-click": "pavucontrol",
+      	"tooltip": false
+      	},
+      "custom/spotify": {
+      	"interval": 1,
+      	"return-type": "json",
+      	"exec": "~/.config/waybar/modules/spotify.sh",
+      	"exec-if": "pgrep spotify",
+      	"escape": true
+      },
+      "tray": {
+        "icon-size": 18,
+	"spacing": 10
+    	},
+      "sway/window": {
+       	"max-length": 80,
+        "tooltip": false
+    	},
+      "clock": {
+        "format": "{:%a %d %b %H:%M}",
+        "tooltip": false
+    	}
+    }
+
+}
+# {
+#     "layer": "bottom",
+#     "output": "DVI-D-1",
+#     "height": 30,
+#     "modules-left": ["sway/workspaces", "sway/mode"],
+#     "modules-center": ["sway/window"],
+#     "modules-right": ["clock"],
+#         "sway/mode": {
+#       "format": "<span style=\"italic\">{}</span>"
+#     },
+#     "clock": {
+#       "interval": 60,
+#       "tooltip-format": "{:%c}",
+#       "format-alt": "{:%Y-%m-%d}",
+#       "format": "{:%A, %H:%M}"
+# }
+  

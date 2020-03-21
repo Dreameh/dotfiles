@@ -1,0 +1,23 @@
+* Dotfiles
+  I sneaked the install script which takes care of stow [[https://github.com/kkhan01/dotfiles][here]] .
+  These are all config files that I have dabbled with in the past, or
+  something I use today, some things more frequently than others... like
+  the .emacs.d config so that will obviously be updated more frequently.
+
+* Install instructions
+  Whatever you do, do not do this:
+  #+BEGIN_SRC sh
+  git clone https://github.com/Dreameh/dotfiles.git
+  cd dotfiles; ./install
+  #+END_SRC
+
+  That's not how you should do it, you should do this:
+  #+BEGIN_SRC sh
+  git clone https://github.com/Dreameh/dotfiles.git
+  cd dotfiles
+  ./install PROGRAM
+  #+END_SRC
+  the parameter =PROGRAM= is a placeholder for you to replace with
+  whatever exists in the dotfiles repository and it will then get
+  symlinked and then you can start use it.
+
