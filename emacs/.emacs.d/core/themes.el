@@ -37,10 +37,11 @@
   (doom-vibrant-brighter-comments t)
   (doom-vibrant-brighter-modeline t)
   :config
-  (load-theme 'doom-dracula t)
-  (doom-themes-org-config)
-  (setq-default doom-themes-treemacs-theme "doom-colors")
+  (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config))
+
+(load-theme 'doom-dracula t)
+(doom-themes-org-config)
 
 (use-package solaire-mode
   :defer nil

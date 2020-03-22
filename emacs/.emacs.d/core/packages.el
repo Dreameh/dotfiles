@@ -23,13 +23,20 @@
   (load bootstrap-file nil 'nomessage))
 
 ;; making straight-use-package look "better".
-(setq-default use-package-always-defer t)
+(setq use-package-always-defer t
+      use-package-verbose t)
+
 (straight-use-package 'use-package)
 
 (straight-use-package 'use-package-ensure-system-package)
 
 ;; And adding el-patch for easier access to github repositories
 (straight-use-package 'el-patch)
+
+;; Loading no-littering before any other third-party package.
+(use-package no-littering
+  :init
+  (require 'no-littering))
 
 (provide 'packages)
 ;;; packages.el ends here
