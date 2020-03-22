@@ -52,9 +52,6 @@
     file-manage
     git-features))
 
-(dolist (module dreameh--core-modules)
-  (require module))
-
 (defvar dreameh--extra-modules
   '(module-lsp
     module-treemacs
@@ -67,12 +64,15 @@
     module-java
     module-web))
 
+(dolist (module dreameh--core-modules)
+  (require module))
+
 (dolist (module dreameh--extra-modules)
   (require module))
 
 (require 'change-tabs)
 
-(global-set-key (kbd "M-<tab>") 'change-tab-to-spaces)
+(global-set-key (kbd "C-<tab>") 'change-tab-to-spaces)
 
 (provide 'init)
 ;;; init.el ends here
