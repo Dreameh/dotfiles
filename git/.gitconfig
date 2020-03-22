@@ -1,0 +1,9 @@
+[user]
+	email = kyusaki1@gmail.com
+	name = Lucas Pentinsaari
+	signingkey = 65A3C5817E4062A1D88EFC9BA44835EB3928C338
+[commit]
+	gpgsign = true
+[color]
+	ui = auto
+
