@@ -31,7 +31,6 @@
 
 ;; Enable doom theme
 (use-package doom-themes
-  :defer nil
   :if window-system
   :custom
   (doom-vibrant-brighter-comments t)
@@ -44,7 +43,6 @@
 (doom-themes-org-config)
 
 (use-package solaire-mode
-  :defer nil
   :functions persp-load-state-from-file
   :hook
   (prog-mode . turn-on-solaire-mode)
