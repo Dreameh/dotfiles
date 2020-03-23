@@ -3,7 +3,6 @@
 
 ;;; Code:
 
-;; Font
 ;; Scrolling ""might"" lag unless you have this
 (setq-default scroll-margin 0
               scroll-conservatively 10000
@@ -38,8 +37,9 @@
 (setq apropos-do-all t)
 
 
-
-(set-face-attribute 'default nil :font "Source Code Pro" :height 100)
+;; Font
+(add-to-list 'default-frame-alist '(font . "Source Code Pro-12"))
+;; (set-face-attribute 'default t :font "Source Code Pro-12")
 
 ;; Encoding
 (setq locale-coding-system 'utf-8)
