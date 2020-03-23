@@ -5,9 +5,6 @@
 ;; a number of other files.
 
 ;;; Code:
-;; Always prefer newer byte-code
-(setq load-prefer-newer t)
-
 (defun drm/add-string-from-path (dir)
   "Expands directory from DIR."
   (expand-file-name dir user-emacs-directory))
@@ -27,26 +24,9 @@
 (update-load-path)
 (add-subdirs-to-load-path)
 
-;; Don't create lockfiles
-(setq create-lockfiles nil)
-
-;; Font
-(set-face-attribute 'default nil :font "Source Code Pro" :height 100)
-
-;; Encoding
-(setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
-
-;; Yeet the custom file to the magical land of /dev/zero
-(if(string-equal system-type "windows-nt")
-    (defconst custom-file "~/custom-file")
-  (defconst custom-file "/dev/zero"))
-
 (defvar dreameh--core-modules
-  '(keybinds
+  '(base
+    keybinds
     packages
     optimization
     ui-frames
@@ -73,10 +53,6 @@
 
 (dolist (module dreameh--extra-modules)
   (require module))
-
-(require 'change-tabs)
-
-(global-set-key (kbd "C-<tab>") 'change-tab-to-spaces)
 
 (provide 'init)
 ;;; init.el ends here
