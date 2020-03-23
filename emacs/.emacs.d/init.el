@@ -27,6 +27,9 @@
 (update-load-path)
 (add-subdirs-to-load-path)
 
+;; Don't create lockfiles
+(setq create-lockfiles nil)
+
 ;; Font
 (set-face-attribute 'default nil :font "Source Code Pro" :height 100)
 
@@ -50,7 +53,8 @@
     themes
     text
     file-manage
-    git-features))
+    git-features
+    misc))
 
 (defvar dreameh--extra-modules
   '(module-lsp
