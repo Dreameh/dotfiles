@@ -70,6 +70,7 @@
   (flycheck-add-next-checker 'typescript-tide 'javascript-eslint)
   (flycheck-add-next-checker 'tsx-tide 'javascript-eslint))
 
+
 ;; React
 (use-package rjsx-mode
   :mode
