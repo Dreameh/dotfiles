@@ -37,7 +37,7 @@
   (progn
     (ivy-mode 1)
     (setq ivy-use-virtual-buffers t)
-    (global-set-key "\C-s" 'swiper)
+    (global-set-key (kbd "C-s") 'swiper)
     (global-set-key (kbd "C-c C-r") 'ivy-resume)
     (global-set-key (kbd "<f6>") 'ivy-resume)
     (global-set-key (kbd "M-x") 'counsel-M-x)
@@ -51,7 +51,6 @@
     (global-set-key (kbd "C-c j") 'counsel-git-grep)
     (global-set-key (kbd "C-c k") 'counsel-ag)
     (global-set-key (kbd "C-x l") 'counsel-locate)
-    (global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
     (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)))
 
 
@@ -87,11 +86,11 @@
 
 ;; Enable flycheck
 (use-package flycheck
+  :diminish flycheck-mode
   :init (global-flycheck-mode)
   (setq-default flycheck-check-syntax-automatically '(save
                                                       idle-change
-                                                      mode-enable))
-  :diminish flycheck-mode)
+                                                      mode-enable)))
 
 (use-package subword
   :init (global-subword-mode)
