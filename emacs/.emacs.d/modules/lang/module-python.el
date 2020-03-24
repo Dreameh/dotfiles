@@ -9,16 +9,13 @@
   :hook (text-mode . pip-requirements-mode))
 
 (setq lsp-python-ms-executable
-      "~/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer")
+      "~/lang-servers/python/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer")
 
 (use-package lsp-python-ms
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-python-ms)
-                         (lsp)))
-  :defer 0.3
+  :hook (python-mode . lsp-deferred)
   :custom
-  (lsp-python-ms-dir (expand-file-name "~/python-language-server/output/bin/Release/"))
-  (lsp-python-ms-executable "~/python-language-server/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
+  (lsp-python-ms-dir (expand-file-name "~/lang-servers/python/output/bin/Release/"))
+  (lsp-python-ms-executable "~/lang-servers/python/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer"))
 
 (provide 'module-python)
 ;;; module-python.el ends here

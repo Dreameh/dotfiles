@@ -45,7 +45,7 @@
    (web-mode  . emmet-mode)))
 
 (use-package typescript-mode
-  :hook (typescript-mode . lsp)
+  :hook (typescript-mode . lsp-deferred)
   :mode (("\\.ts\\'" . typescript-mode)
          ("\\.tsx\\'" . typescript-mode)))
 

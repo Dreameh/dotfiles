@@ -35,10 +35,10 @@
   :bind (("C-M-<tab>" . clang-format-region)))
 
 (use-package ccls
-  :after (lsp-mode)
+  :after (lsp)
   :hook ((c-mode c++-mode) . lsp-deferred)
   :config
-  (setq ccls-executable "/usr/bin/ccls")
+  (setq ccls-executable "/bin/ccls")
   (setq ccls-initialization-options '(:index (:comments 2) :completion (:detailedLabel t)))
   (setq ccls-sem-highlight-method 'font-lock))
 
