@@ -2,7 +2,7 @@
 ;;; Commentary:
 
 ;;; Code:
-(use-package pip-requirements)
+(straight-use-package 'pip-requirements)
 
 (use-package lsp-python-ms
   :hook (python-mode . lsp-deferred)
