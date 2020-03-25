@@ -88,9 +88,9 @@
 (use-package flycheck
   :diminish flycheck-mode
   :init (global-flycheck-mode)
-  (setq-default flycheck-check-syntax-automatically '(save
-                                                      idle-change
-                                                      mode-enable)))
+  (setq flycheck-check-syntax-automatically '(save
+					      idle-change
+					      mode-enable)))
 
 (use-package subword
   :init (global-subword-mode)

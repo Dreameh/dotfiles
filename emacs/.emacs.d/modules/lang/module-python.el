@@ -4,9 +4,7 @@
 ;;; Code:
 (defconst drm/python-executable "python3")
 
-(use-package pip-requirements
-  :mode ("requirements\\.txt" . pip-requirements-mode)
-  :hook (text-mode . pip-requirements-mode))
+(use-package pip-requirements)
 
 (setq lsp-python-ms-executable
       "~/lang-servers/python/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer")
