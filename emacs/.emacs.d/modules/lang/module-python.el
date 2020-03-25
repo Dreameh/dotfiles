@@ -2,12 +2,7 @@
 ;;; Commentary:
 
 ;;; Code:
-(defconst drm/python-executable "python3")
-
 (use-package pip-requirements)
-
-(setq lsp-python-ms-executable
-      "~/lang-servers/python/output/bin/Release/linux-x64/publish/Microsoft.Python.LanguageServer")
 
 (use-package lsp-python-ms
   :hook (python-mode . lsp-deferred)
