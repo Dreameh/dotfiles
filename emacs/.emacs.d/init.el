@@ -9,8 +9,6 @@
   "Expands directory from DIR."
   (expand-file-name dir user-emacs-directory))
 
-;; Load path
-;; Optimize: Force "modules" and "core" at the head to reduce the startup time.
 (defun update-load-path ()
   "Update `load-path'."
   (dolist (dir '("core" "modules" "modules/lang" "modules/tool" "modules/org"))
