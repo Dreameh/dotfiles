@@ -9,20 +9,14 @@
   "Expands directory from DIR."
   (expand-file-name dir user-emacs-directory))
 
-;; ;; Load path
-;; ;; Optimize: Force "modules" and "core" at the head to reduce the startup time.
+;; Load path
+;; Optimize: Force "modules" and "core" at the head to reduce the startup time.
 (defun update-load-path ()
   "Update `load-path'."
-  (dolist (dir '("core" "modules"))
+  (dolist (dir '("core" "modules" "modules/lang" "modules/tool" "modules/org"))
     (push (drm/add-string-from-path dir) load-path)))
 
-(defun add-subdirs-to-load-path ()
-  "Add subdirectories to `load-path'."
-  (let ((default-directory (drm/add-string-from-path "modules")))
-    (normal-top-level-add-subdirs-to-load-path)))
-
 (update-load-path)
-(add-subdirs-to-load-path)
 
 (defvar dreameh--core-modules
   '(base
@@ -48,11 +42,11 @@
     module-java
     module-web))
 
-(dolist (module dreameh--core-modules)
-  (require module))
+(dolist (module-core dreameh--core-modules)
+  (require module-core))
 
-(dolist (module dreameh--extra-modules)
-  (require module))
+(dolist (module-extra dreameh--extra-modules)
+  (require module-extra))
 
 (provide 'init)
 ;;; init.el ends here
