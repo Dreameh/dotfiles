@@ -2,19 +2,28 @@
 ;;; Commentary:
 
 ;;; Code:
-(use-package all-the-icons-ivy
-  :defer 0.3
-  :after ivy
-  :config
-  (setq-default all-the-icons-ivy-file-commands (append all-the-icons-ivy-file-commands '(counsel-projectile-find-file counsel-projectile-find-file-dwim)))
-  (all-the-icons-ivy-setup)
-  :diminish ivy-mode)
 
-(use-package avy
-  :bind ("M-s" . avy-goto-char))
+;; (use-package all-the-icons-ivy
+;;   :defer 0.3
+;;   :after ivy
+;;   :config
+;;   (setq-default all-the-icons-ivy-file-commands (append all-the-icons-ivy-file-commands '(counsel-projectile-find-file counsel-projectile-find-file-dwim)))
+;;   (all-the-icons-ivy-setup)
+;;   :diminish ivy-mode)
 
 ;; Counsel is a completion "framework" using ivy
 (use-package counsel)
+
+(use-package ivy-rich
+  :after ivy
+  :init (ivy-rich-mode 1))
+
+(use-package all-the-icons-ivy-rich
+  :after ivy-rich
+  :init (all-the-icons-ivy-rich-mode 1))
+
+(use-package avy
+  :bind ("M-s" . avy-goto-char))
 
 (use-package projectile
   :defer nil

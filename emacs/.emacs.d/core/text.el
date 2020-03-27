@@ -84,7 +84,6 @@
   :after (company)
   :hook (company-mode . company-box-mode))
 
-;; Enable flycheck
 (use-package flycheck
   :diminish flycheck-mode
   :init (global-flycheck-mode)
