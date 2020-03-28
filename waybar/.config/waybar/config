@@ -1,21 +1,44 @@
 {
     "layer": "top",
-	"output": "HDMI-A-2",
+    "output": "HDMI-A-2",
     "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["sway/window"],
+    "modules-right": ["disk", "network", "tray", "clock"],
+    "height": 30,
     "sway/workspaces": {
-        "format": "{name}",
-        "disable-scroll": true
+    "disable-scroll": true,
+    "all-outputs": true,
+    "format": "{name}: {icon}",
+    "format-icons": {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": "",
+        "urgent": "",
+        "focused": "",
+        "default": ""
+    	}
     },
-    "sway/mode": {
-        "format": " {}"
+    "disk": {
+        "interval": 30,
+        "format": "Only {free} config space left",
+        "path": "/home/dreameh"
     },
-}
-{
-	"layer": "top",
-	"output": "DVI-D-1",
-     "modules-right": ["clock"],
-     "clock": {
-        "format": "{:%a %d %b %H:%M}",
-        "tooltip": false
+    "tray": {
+        "icon-size": 20,
+        "spacing": 10
     },
+    "sway/window": {
+        "max-length": 50
+    },
+    "clock": {
+        "format-alt": "{:%a, %d. %b  %H:%M}"
+    },
+    "network": {
+    "interface": "enp4s0",
+    "format-ethernet": "Doxxed IP | {ipaddr}",
+    "format-disconnected": "No IP",
+    "max-length": 50
+    }
 }
