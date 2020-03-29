@@ -35,7 +35,7 @@
   :bind (("C-M-<tab>" . clang-format-region)))
 
 (use-package ccls
-  :after (lsp)
+  :after (lsp-mode)
   :hook ((c-mode c++-mode) . lsp-deferred)
   :config
   (setq ccls-executable "/bin/ccls")

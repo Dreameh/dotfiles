@@ -38,6 +38,7 @@
     module-markdown
     module-python
     module-java
+    module-rust
     module-web))
 
 (dolist (module-core dreameh--core-modules)

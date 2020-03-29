@@ -34,7 +34,7 @@
 
 (setq idle-update-delay 1)
 (setq ad-redefinition-action 'accept)
-(setq apropos-do-all t)
+(setq-default apropos-do-all t)
 
 
 ;; Font
@@ -49,10 +49,10 @@
 (prefer-coding-system 'utf-8)
 
 ;; Yeet the custom file to the magical land of /dev/zero
-(if(string-equal system-type "windows-nt")
-    (defconst custom-file "~/custom-file")
-  (defconst custom-file "/dev/zero"))
-
+(setq custom-file
+      (if (memq system-type '(gnu/linux
+			      darwin))
+	  "/dev/null" "NUL"))
 
 (provide 'base)
 ;; Local Variables:

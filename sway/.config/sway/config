@@ -28,7 +28,7 @@ default_floating_border normal
 hide_edge_borders smart
 
 smart_gaps on
-gaps inner 10
+gaps inner 20
 
 set $cl_high #009ddc
 set $cl_indi #d9d8d8

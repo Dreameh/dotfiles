@@ -12,7 +12,6 @@
 ;;   :init (setq markdown-command "pandoc"))
 
 (use-package markdown-mode
-  :defer nil
   :mode
   ("\\.\\(md\\|markdown\\)\\'" . markdown-mode))
 
