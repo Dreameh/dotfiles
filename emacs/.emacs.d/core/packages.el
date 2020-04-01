@@ -7,7 +7,8 @@
 (when (= emacs-major-version 26)
 (setq-default gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
-(setq-default straight-use-package-by-default t)
+(setq package-enable-at-startup nil)
+(setq straight-use-package-by-default t)
 ;;; Straight initialization
 (defvar bootstrap-version)
 (let ((bootstrap-file

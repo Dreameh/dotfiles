@@ -28,10 +28,13 @@
     git-features
     misc))
 
-(defvar dreameh--extra-modules
+(defvar dreameh--tool-modules
   '(module-lsp
     module-treemacs
-    module-cc
+    module-pdf))
+
+(defvar dreameh--extra-modules
+  '(module-cc
     module-clisp
     module-clojure
     module-org
@@ -41,8 +44,13 @@
     module-rust
     module-web))
 
+
+
 (dolist (module-core dreameh--core-modules)
   (require module-core))
+
+(dolist (module-tool dreameh--tool-modules)
+  (require module-tool))
 
 (dolist (module-extra dreameh--extra-modules)
   (require module-extra))
