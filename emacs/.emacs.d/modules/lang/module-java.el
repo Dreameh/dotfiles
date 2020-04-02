@@ -4,7 +4,6 @@
 ;;; Code:
 
 (use-package lsp-java
-  :after (lsp-mode)
   :hook (java-mode . lsp-deferred)
   :config
   (require 'dap-java))

@@ -4,7 +4,6 @@
 ;;; Code:
 (use-package lsp-mode
   :hook (lsp-mode . lsp-enable-which-key-integration)
-  :commands (lsp lsp-deferred)
   :custom
   (lsp-auto-guess-root t)
   (lsp-before-save-edits t)

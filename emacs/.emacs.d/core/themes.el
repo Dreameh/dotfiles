@@ -59,7 +59,7 @@
 
 ;;
 ;;; Dashboard
-(use-package page-break-lines)
+;;(use-package page-break-lines)
 
   (defun my/dashboard-banner ()
   """Set a dashboard banner including information on package initialization
@@ -77,6 +77,7 @@
   :config
   (setq dashboard-set-init-info nil
 	dashboard-center-content t
+	dashboard-page-separator "\n\n"
 	dashboard-set-heading-icons t
 	dashboard-set-file-icons t
 	dashboard-startup-banner 'logo)

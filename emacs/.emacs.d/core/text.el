@@ -99,6 +99,13 @@
   :defer nil
   :config (editorconfig-mode 1))
 
+(use-package yasnippet
+  :defer nil
+  :init (yas-global-mode 1))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
 (provide 'text)
 
 ;; Local Variables:
