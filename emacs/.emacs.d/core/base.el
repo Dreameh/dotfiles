@@ -14,7 +14,6 @@
 ;; spells of inaccurate fontification immediately after scrolling.
 (setq fast-but-imprecise-scrolling t)
 
-
 ;; Increase the maximum stack depth (the default is 1000).
 (setq max-specpdl-size 2000)
 

@@ -12,7 +12,7 @@
 ;; Not enabling packages at startup for a good reason
 (setq package-enable-at-startup nil)
 
-;; preven un-styled emacs by disabling UI elements early.
+;; prevent un-styled emacs by disabling UI elements early.
 ;; Faster to disable these here (before they've been initialized)
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)

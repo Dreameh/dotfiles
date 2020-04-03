@@ -3,14 +3,6 @@
 
 ;;; Code:
 
-;; (use-package all-the-icons-ivy
-;;   :defer 0.3
-;;   :after ivy
-;;   :config
-;;   (setq-default all-the-icons-ivy-file-commands (append all-the-icons-ivy-file-commands '(counsel-projectile-find-file counsel-projectile-find-file-dwim)))
-;;   (all-the-icons-ivy-setup)
-;;   :diminish ivy-mode)
-
 ;; Counsel is a completion "framework" using ivy
 (use-package counsel)
 

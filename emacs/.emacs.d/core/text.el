@@ -100,8 +100,9 @@
   :config (editorconfig-mode 1))
 
 (use-package yasnippet
+  :init (yas-global-mode 1)
   :defer nil
-  :init (yas-global-mode 1))
+  :config (bind-key* "C-;" 'company-yasnippet))
 
 (use-package yasnippet-snippets
   :after yasnippet)
