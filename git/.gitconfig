@@ -7,3 +7,7 @@
 [color]
 	ui = auto
 
+[ssl]
+	verify = false
+[http]
+	sslverify = false

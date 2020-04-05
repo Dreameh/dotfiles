@@ -41,7 +41,7 @@
   :bind (:map sly-mode-map
 	      ("C-c C-e" . sly-load-file)
 	      ("C-c C-k" . sly-compile-and-load-file)
-	      ("TAB"     . sly-indent-and-complete-symbol)
+	      ("TAB"     . sly-mrepl-indent-and-complete-symbol)
 	      ("C-c i"   . sly-inspect)
 	      ("C-c C-s" . sly-selector))
   :config

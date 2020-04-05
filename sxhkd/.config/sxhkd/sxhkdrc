@@ -2,15 +2,19 @@
 alt + shift + e
     emacs
 
-# networkmanager 
+# networkmanager
 super + F1
-      networkmanager_dmenu	
+      networkmanager_dmenu
 
-#Rofi
-super + d 
-    rofi -show run
+# Rofi
+super + d
+    rofi -show run #dmenu_recency
 
-#Toggle fullscreen of window
+# Rofi Tab
+super + TAB
+    rofi -show-icons -modi windowcd,window,drun -show window
+
+# Toggle fullscreen of window
 super + f
 	bspc node --state \~fullscreen
 
@@ -19,51 +23,51 @@ super + f
 super + p
 	bspc node --state \~pseudo_tiled
 
-#Rofi theme selector
+# Rofi theme selector
 super + r
     rofi-theme-selector
 
-#Hide polybar
+# Hide polybar
 super + y
     polybar-msg cmd toggle
 
-#Terminal emulator
+# Terminal emulator
 super + Return
-        kitty	
+        kitty
 
-#File-Manager
+# File-Manager
 super + shift + Return
 	thunar
 
-#Reload bspwm
+# Reload bspwm
 super + shift + r
 	~/.config/bspwm/bspwmrc
 
-#reload sxhkd:
+# reload sxhkd:
 super + shift + s
 	pkill -USR1 -x sxhkd
 
-#kill
+# kill
 super + shift + q
 	bspc node -c
 
-#Logout
+# Logout
 super + shift + x
 	bspc quit
 
-#Nitrogen
+# Nitrogen
 ctrl + alt + i
      nitrogen
 
-#Screen-Locker
+# Screen-Locker
 ctrl + alt + l
      slimlock
 
-#Xfce4-settings-manager
+# Xfce4-settings-manager
 ctrl + alt + m
      xfce4-settings-manager
 
-#Xcfe4-TaskManager
+# Xcfe4-TaskManager
 ctrl + shift + Escape
     xfce4-taskmanager
 
@@ -71,15 +75,18 @@ ctrl + shift + Escape
 Print
     scrot 'Leenooks-%Y-%m-%d-%s_screenshot_$wx$h.jpg' -e 'mv $f $$(~/Pictures/screenshots)'
 
+super + shift + Print
+    flameshot gui
+
 #########################
 # BSPWM LAYOUT KEYS     #
 #########################
 
-#Focus selected desktop
+# Focus selected desktop
 super + {1-9,0}
 	bspc desktop -f '^{1-9,10}'
 
-#Move window to selected desktop
+# Move window to selected desktop
 super + shift + {1-9,0}
     id=$(bspc query -N -n); bspc node -d ^{1-9,10}; bspc node -f ${id}}
 
@@ -100,7 +107,7 @@ ctrl +alt + Up
 ctrl + alt + Down
 	bspc node --focus south
 
-#Rotate desktop
+# Rotate desktop
 alt + space
 	bspc node @/ --rotate {90,-90}
 
