@@ -33,7 +33,7 @@
   :bind ("C-c C-r" . build-and-run)
   :hook (java-mode . (lambda () (gradle-mode 1))))
 
-(straight-use-package 'mvn)
+(use-package mvn)
 
 (provide 'module-java)
 ;;; module-java.el ends here
