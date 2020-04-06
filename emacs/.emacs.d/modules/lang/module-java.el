@@ -25,6 +25,7 @@
 
 
 (defun build-and-run()
+  "Just builds and run a gradle project."
   (interactive)
   (gradle-run "build run"))
 
