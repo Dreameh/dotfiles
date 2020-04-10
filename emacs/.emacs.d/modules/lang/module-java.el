@@ -14,6 +14,7 @@
          "-XX:+UseG1GC"
          "-XX:+UseStringDeduplication"
          "-javaagent:/home/dreameh/lang-servers/lombok.jar"))
+  (setq lsp-java-format-on-type-enabled nil)
   (require 'lsp-java-boot)
 
   ;; to enable the lenses
@@ -21,8 +22,7 @@
   (add-hook 'java-mode-hook #'lsp-java-boot-lens-mode))
 
 ;; For gradle build files
-(straight-use-package 'groovy-mode)
-
+(use-package groovy-mode)
 
 (defun build-and-run()
   "Just builds and run a gradle project."

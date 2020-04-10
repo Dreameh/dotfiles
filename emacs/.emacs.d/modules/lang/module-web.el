@@ -18,9 +18,6 @@
   :config
   ;; Highlight the element under the cursor.
   (setq-default web-mode-enable-current-element-highlight t)
-  ;; built in color for most themes dont work well with my eyes
-  (eval-after-load "web-mode"
-    '(set-face-background 'web-mode-current-element-highlight-face "LightCoral"))
   :custom
   (web-mode-attr-indent-offset 2)
   (web-mode-block-padding 2)
@@ -81,6 +78,11 @@
   :init
   (setq-default rjsx-basic-offset 2)
   (setq-default rjsx-global-externs '("module" "require" "assert" "setTimeout" "clearTimeout" "setInterval" "clearInterval" "location" "__dirname" "console" "JSON")))
+
+;; Vue
+(use-package vue-mode
+  :mode "\\.vue\\'"
+  :hook (vue-mode . lsp-deferred))
 
 (provide 'module-web)
 ;;; module-web.el ends here

@@ -53,5 +53,7 @@
 (dolist (module-extra dreameh--extra-modules)
   (require module-extra))
 
+(setq-default  frame-title-format '("Dreamomacs" " - " "%b"))
+
 (provide 'init)
 ;;; init.el ends here
