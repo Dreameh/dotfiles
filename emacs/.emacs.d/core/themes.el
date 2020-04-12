@@ -42,6 +42,9 @@
 (load-theme 'doom-dracula t)
 (doom-themes-org-config)
 
+(use-package hide-mode-line
+  :hook ((comint-mode help-mode) . hide-mode-line-mode))
+
 (use-package solaire-mode
   :functions persp-load-state-from-file
   :hook

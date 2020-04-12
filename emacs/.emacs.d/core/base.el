@@ -35,11 +35,6 @@
 (setq ad-redefinition-action 'accept)
 (setq-default apropos-do-all t)
 
-
-;; Font
-(add-to-list 'default-frame-alist '(font . "Source Code Pro-12"))
-;; (set-face-attribute 'default t :font "Source Code Pro-12")
-
 ;; Encoding
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
