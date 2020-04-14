@@ -9,6 +9,15 @@
   :config
   (setq elcord-use-major-mode-as-main-icon t))
 
+(use-package esup
+  :commands (esup))
+
+;; Remember to add personal/settings.el -- wakatime-api-key variable
+(use-package wakatime-mode
+  :init (global-wakatime-mode)
+  :config
+  (setq wakatime-cli-path (executable-find "wakatime")))
+
 (provide 'misc)
 ;; Local Variables:
 ;; coding: utf-8

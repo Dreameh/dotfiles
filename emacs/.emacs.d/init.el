@@ -30,7 +30,7 @@
 
 (defun update-load-path ()
   "Update `load-path'."
-  (dolist (dir '("core" "modules" "modules/lang" "modules/tool" "modules/org"))
+  (dolist (dir '("core" "modules" "personal" "modules/lang" "modules/tool" "modules/org"))
     (push (drm/add-string-from-path dir) load-path)))
 
 (update-load-path)
@@ -45,7 +45,8 @@
     text
     file-manage
     git-features
-    misc))
+    misc
+    settings))
 
 (defvar dreameh--tool-modules
   '(module-lsp

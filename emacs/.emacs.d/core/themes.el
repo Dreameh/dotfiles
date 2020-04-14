@@ -39,7 +39,7 @@
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config))
 
-(load-theme 'doom-dracula t)
+(load-theme 'doom-horizon t)
 (doom-themes-org-config)
 
 (use-package hide-mode-line

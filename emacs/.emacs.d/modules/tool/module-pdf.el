@@ -13,7 +13,8 @@
               ("C-s" . isearch-forward))
   :init
   ;;(pdf-tools-install t nil t t) ;; FIRST TIME INSTALL USAGE
-  (pdf-tools-install)
+  ;; (pdf-tools-install)
+  (pdf-loader-install)
   ;; Recover last viewed position
   (setq pdf-annot-activate-created-annotations t)
   (when (>= emacs-major-version 26)
