@@ -55,13 +55,13 @@
 
 (defvar dreameh--extra-modules
   '(module-cc
-    module-clisp
+;;    module-clisp
     module-clojure
     module-org
     module-markdown
     module-python
     module-java
-    module-rust
+;;    module-rust
     module-web))
 
 (dolist (module-core dreameh--core-modules)

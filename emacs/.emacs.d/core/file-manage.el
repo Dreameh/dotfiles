@@ -46,6 +46,8 @@
   :defer nil
   :init (which-key-mode +1))
 
+(use-package bufler)
+
 (provide 'file-manage)
 
 ;; Local Variables:

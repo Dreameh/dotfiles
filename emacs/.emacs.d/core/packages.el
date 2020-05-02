@@ -9,6 +9,7 @@
 
 (setq package-enable-at-startup nil)
 (setq straight-use-package-by-default t)
+(setq straight-recipe-repositories nil)
 ;;; Straight initialization
 (defvar bootstrap-version)
 (let ((bootstrap-file

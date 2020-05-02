@@ -9,7 +9,7 @@
   ("C-c c" . org-capture)
   :config
   (require 'org-tempo)
-  (setq org-directory "~/Documents/org")
+  (setq org-directory "~/Nextcloud/Documents/org/")
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (setq org-confirm-babel-evaluate nil)

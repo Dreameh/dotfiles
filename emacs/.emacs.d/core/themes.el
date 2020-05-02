@@ -16,6 +16,12 @@
 
 ;;
 ;;; Doom Modeline
+;; (straight-use-package
+;;  '(simple-modeline :type git :host github :repo "gexplorer/simple-modeline"))
+
+;; (use-package simple-modeline
+;;   :hook (after-init . simple-modeline-mode))
+
 (use-package doom-modeline
   :defer nil
   :custom
@@ -39,7 +45,7 @@
   (setq doom-themes-treemacs-theme "doom-colors")
   (doom-themes-treemacs-config))
 
-(load-theme 'doom-horizon t)
+(load-theme 'doom-gruvbox t)
 (doom-themes-org-config)
 
 (use-package hide-mode-line
