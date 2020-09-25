@@ -2,7 +2,7 @@
 set $mod Mod4
 
 # Your preferred terminal emulator
-set $term kitty
+set $term alacritty
 
 # Default font
 font pango: Source Code Pro 12
@@ -182,5 +182,9 @@ client.urgent           $cl_urge $cl_urge $cl_fore $cl_urge $cl_urge
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 # Nitrogen & Compton
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
+# Variety (if i haven't set a preferred wallpaper)
+exec --no-startup-id variety
 # Fix screen
 exec --no-startup-id bash ~/.screenlayout/screenlayout.sh;
+# start dunst
+exec_always --no-startup-id dunst

@@ -8,10 +8,10 @@
   (lsp-auto-guess-root t)
   (lsp-before-save-edits t)
   (lsp-auto-configure t)
+  (lsp-enable-indentation t)
   (lsp-enable-snippet nil)
   (lsp-prefer-flymake nil)
-  :config
-  (require 'lsp-clients))
+  (lsp-completion-provider :capf))
 
 (use-package company-lsp
   :after (company lsp)
@@ -42,5 +42,6 @@
 	      ("C-x s v" . dap-ui-sessions)
 	      ("C-x l v" . dap-ui-locals)))
 
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
 (provide 'module-lsp)
 ;;; module-lsp.el ends here

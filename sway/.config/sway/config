@@ -9,18 +9,20 @@ set $up k
 set $right l
 
 # Your preferred terminal emulator
-set $term kitty
+set $term alacritty
 
 # Screenshot
 set $screenshot grim ~/Bilder/screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
 set $screenclip slurp | grim -g - ~/Bilder/screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
 
 # Setting background
-set $background ~/cache/wall.png
+set $background ~/cache/wall.jpg
 
 # Setting up rofi to act better
-set $menu rofi -m $(expr $(swaymsg -t get_tree | jq '.nodes | map([recurse(.nodes[]?, .floating_nodes[]?) | .focused] | any) | index(true)') - 1) -show drun -run-command 'swaymsg exec -- {cmd}'
-set $menu rofi -2 -m $(swaymsg -t get_outputs | jq 'map(select(.active) | .focused) | index(true)') -show drun -run-command 'swaymsg exec -- {cmd}'
+#set $menu rofi -m $(expr $(swaymsg -t get_tree | jq '.nodes | map([recurse(.nodes[]?, .floating_nodes[]?) | .focused] | any) | index(true)')) -show drun -run-command 'swaymsg exec -- {cmd}'
+#set $menu rofi -2 -m $(swaymsg -t get_outputs | jq 'map(select(.active) | .focused) | index(true)') -show drun -run-command 'swaymsg exec -- {cmd}'
+set $menu rofi -show drun
+
 
 # Window borders
 default_border pixel 1
@@ -44,8 +46,9 @@ client.urgent           $cl_urge $cl_urge $cl_fore $cl_urge $cl_urge
 
 ### Output configuration
 # Wallpaper
-output HDMI-A-2 resolution 1920x1080 position 1920,0 bg $background fill
-output DVI-D-1  resolution 1920x1080 position 0,0 bg $background fill
+output DP-1 resolution 1920x1080 position 1920,0 bg $background fill
+output HDMI-A-1  resolution 1920x1080 position 0,0 bg $background fill
+#output HDMI-A-1 disable
 
 ### Idle configuration
 #
@@ -119,7 +122,7 @@ bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. 
     bindsym $mod+b splith
     bindsym $mod+v splitv
 
-    # Switch the current container between different layout styles
+    # Switch the current container between diferent layout styles
     bindsym $mod+s layout stacking
     bindsym $mod+w layout tabbed
     bindsym $mod+e layout toggle split
@@ -150,6 +153,11 @@ bindsym --locked XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume
 bindsym $mod+Print exec $screenshot
 bindsym $mod+Shift+Print exec $screenclip
 
+# Startup
+# Notification Manager
+exec mako
+# Polkit, so password prompts are available :var:
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 
 # Status Bar:
 bar {

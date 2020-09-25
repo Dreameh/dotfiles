@@ -7,7 +7,7 @@
 (require 'funcs)
 
 ;; Define keybind for config reload
-(global-set-key (kbd "C-c r") 'drm/reload)
+
 
 ;; Define keybind for config edit
 (global-set-key (kbd "C-c e") 'drm/edit-config)

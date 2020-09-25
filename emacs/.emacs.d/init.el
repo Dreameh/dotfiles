@@ -11,6 +11,8 @@
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6)
 
+(setq read-process-output-max (* 1024 1024))
+
 ;; Keep a ref to the actual file-name-handler
 (defvar default-file-name-handler-alist file-name-handler-alist)
 
@@ -45,8 +47,7 @@
     text
     file-manage
     git-features
-    misc
-    settings))
+    misc))
 
 (defvar dreameh--tool-modules
   '(module-lsp
@@ -58,6 +59,8 @@
 ;;    module-clisp
     module-clojure
     module-org
+    module-org-roam
+    ;;module-gkroam
     module-markdown
     module-python
     module-java

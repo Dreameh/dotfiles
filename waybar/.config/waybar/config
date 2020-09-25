@@ -1,6 +1,6 @@
 {
     "layer": "top",
-    "output": "HDMI-A-2",
+    "output": "DP-1",
     "modules-left": ["sway/workspaces", "sway/mode"],
     "modules-center": ["sway/window"],
     "modules-right": ["disk", "network", "tray", "clock"],
@@ -36,7 +36,7 @@
         "format-alt": "{:%a, %d. %b  %H:%M}"
     },
     "network": {
-    "interface": "enp4s0",
+    "interface": "eno1",
     "format-ethernet": "Doxxed IP | {ipaddr}",
     "format-disconnected": "No IP",
     "max-length": 50
