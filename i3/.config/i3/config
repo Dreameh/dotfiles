@@ -2,26 +2,24 @@
 set $mod Mod4
 
 # Your preferred terminal emulator
-set $term alacritty
+set $term kitty
 
 # Default font
-font pango: Source Code Pro 12
+font pango: San Fransisco Display 12
 
 # Window borders
-default_border pixel 1
+default_border pixel 3
 default_floating_border normal
 hide_edge_borders smart
 
 smart_gaps on
 gaps inner 20
+gaps horizontal 10
+gaps vertical 20
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
-# NetworkManager is the most popular way to manage wireless networks on Linux,
-# and nm-applet is a desktop environment-independent system tray GUI for it.
-# exec --no-startup-id nm-applet
 
 # Volume
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume $(pacmd list-sinks |awk '/* index:/{print $3}') +5%
@@ -141,23 +139,6 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
-# Set shut down, restart and locking features
-bindsym $mod+0 mode "$mode_system"
-set $mode_system (l)ock, (e)xit, switch_(u)ser, (s)uspend, (h)ibernate, (r)eboot, (Shift+s)hutdown
-mode "$mode_system" {
-    bindsym l exec --no-startup-id i3exit lock, mode "default"
-    bindsym s exec --no-startup-id i3exit suspend, mode "default"
-    bindsym u exec --no-startup-id i3exit switch_user, mode "default"
-    bindsym e exec --no-startup-id i3exit logout, mode "default"
-    bindsym h exec --no-startup-id i3exit hibernate, mode "default"
-    bindsym r exec --no-startup-id i3exit reboot, mode "default"
-    bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
-
-    # exit system mode: "Enter" or "Escape"
-    bindsym Return mode "default"
-    bindsym Escape mode "default"
-}
-
 # Resize windows
 bindsym $mod+r mode "resize"
 
@@ -173,18 +154,12 @@ client.focused_inactive $cl_back $cl_back $cl_fore $cl_back $cl_back
 client.unfocused        $cl_back $cl_back $cl_fore $cl_back $cl_back
 client.urgent           $cl_urge $cl_urge $cl_fore $cl_urge $cl_urge
 
-# # What bar is used
-# bar {
-#         status_command i3status
-# }
-
-# Launch Polybar
+# Launch apps
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-# Nitrogen & Compton
 exec --no-startup-id nitrogen --restore; sleep 1; compton -b
-# Variety (if i haven't set a preferred wallpaper)
 exec --no-startup-id variety
-# Fix screen
 exec --no-startup-id bash ~/.screenlayout/screenlayout.sh;
-# start dunst
 exec_always --no-startup-id dunst
+exec_always --no-startup-id wal -Ra 90
+exec_always --no-startup-id python3 $HOME/Downloads/i3-alternating-layout/alternating_layouts.py
+exec_always --no-startup-id dropbox

@@ -9,14 +9,15 @@ set $up k
 set $right l
 
 # Your preferred terminal emulator
-set $term alacritty
+set $term kitty
 
 # Screenshot
 set $screenshot grim ~/Bilder/screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
 set $screenclip slurp | grim -g - ~/Bilder/screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
 
 # Setting background
-set $background ~/cache/wall.jpg
+exec --no-startup-id nitrogen --restore
+exec --no-startup-id variety
 
 # Setting up rofi to act better
 #set $menu rofi -m $(expr $(swaymsg -t get_tree | jq '.nodes | map([recurse(.nodes[]?, .floating_nodes[]?) | .focused] | any) | index(true)')) -show drun -run-command 'swaymsg exec -- {cmd}'
@@ -46,8 +47,8 @@ client.urgent           $cl_urge $cl_urge $cl_fore $cl_urge $cl_urge
 
 ### Output configuration
 # Wallpaper
-output DP-1 resolution 1920x1080 position 1920,0 bg $background fill
-output HDMI-A-1  resolution 1920x1080 position 0,0 bg $background fill
+output DP-1 resolution 1920x1080 position 1920,0
+output HDMI-A-1  resolution 1920x1080 position 0,0
 #output HDMI-A-1 disable
 
 ### Idle configuration

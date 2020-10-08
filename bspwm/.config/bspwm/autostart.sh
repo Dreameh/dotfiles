@@ -26,3 +26,4 @@ compton -b &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 #/usr/lib/xfce4/notifyd/xfce4-notifyd &
 dunst > /dev/null 2>&1 &
+wal -R

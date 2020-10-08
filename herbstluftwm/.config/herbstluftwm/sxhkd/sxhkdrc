@@ -33,7 +33,7 @@ super + y
 
 # Terminal emulator
 super + Return
-        alacritty
+        kitty
 
 # File-Manager
 super + shift + Return

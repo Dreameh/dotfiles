@@ -1,0 +1,19 @@
+rofi.theme: ~/.cache/wal/colors-rofi-dark.rasi
+!rofi.show-icons:                     true
+rofi.color-enabled:                  true
+rofi.width:                          30
+rofi.columns:                        1
+rofi.modi:                           drun,run
+rofi.lines:                          6
+rofi.font:                           Bitstream Vera Sans:style=Roman 10
+!rofi.font:                           UW Ttyp0 10
+!rofi.font:                           Liberation Mono 10
+!rofi.font:                           Iosevka 10
+rofi.bw:                             1
+rofi.case-sensitive:                 false
+rofi.terminal: 						 urxvtc
+rofi.eh:                             1
+rofi.auto-select:                    true
+rofi.hide-scrollbar:                 true
+rofi.fake-transparency:              true
+rofi.oppacity:                       80
