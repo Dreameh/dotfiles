@@ -1,8 +1,5 @@
-;;; init.el --- Load the full configuration -*- lexical-binding: t -*-
+;;; init.el --- Loads base config
 ;;; Commentary:
-
-;; This file bootstraps the configuration, which is divided into
-;; a number of other files.
 
 ;;; Code:
 ;; A big contributor to startup times is garbage collection. We up the gc
@@ -26,54 +23,64 @@
           gc-cons-percentage 0.1
           file-name-handler-alist default-file-name-handler-alist)))
 
-(defun drm/add-string-from-path (dir)
-  "Expands directory from DIR."
-  (expand-file-name dir user-emacs-directory))
+;; Scrolling ""might"" lag unless you have this
+(setq-default scroll-margin 0
+              scroll-conservatively 10000
+              scroll-preserve-screen-position t
+              mouse-wheel-progressive-speed nil)
 
-(defun update-load-path ()
-  "Update `load-path'."
-  (dolist (dir '("core" "modules" "personal" "modules/lang" "modules/tool" "modules/org"))
-    (push (drm/add-string-from-path dir) load-path)))
+;; More performant rapid scrolling over unfontified regions. May cause brief
+;; spells of inaccurate fontification immediately after scrolling.
+(setq fast-but-imprecise-scrolling t)
 
-(update-load-path)
+;; Turn off backups and autosaves so we don't have ~ and # files strewn about the working directory. I've
+;; tried storing backups in my home directory as suggested by http://stackoverflow.com/q/151945/46237, but
+;; still I see the occasional backup file in the working directory for some reason.
+(setq make-backup-files nil)
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+(setq auto-save-default nil)
 
-(defvar dreameh--core-modules
-  '(base
-    keybinds
-    packages
-    optimization
-    ui-frames
-    themes
-    text
-    file-manage
-    git-features
-    misc))
+;; Disable Emacs' write-lock, which creates temporary .#files when saving. This crashes coffeescript --watch.
+;; https://github.com/jashkenas/coffeescript/issues/985
+(setq create-lockfiles nil)
 
-(defvar dreameh--tool-modules
-  '(module-lsp
-    module-treemacs
-    module-pdf))
+(setq vc-follow-symlinks t) ; Don't ask confirmation to follow symlinks to edit files.
 
-(defvar dreameh--extra-modules
-  '(module-cc
-    module-clojure
-    module-org
-    module-org-roam
-    module-markdown
-    module-python
-    module-java
-    module-web))
+(setq idle-update-delay 1)
+(setq ad-redefinition-action 'accept)
+(setq-default apropos-do-all t)
 
-(dolist (module-core dreameh--core-modules)
-  (require module-core))
+;; Encoding
+(when (fboundp 'set-charset-priority)
+  (set-charset-priority 'unicode))
+(prefer-coding-system 'utf-8)
+(setq locale-coding-system 'utf-8)
 
-(dolist (module-tool dreameh--tool-modules)
-  (require module-tool))
+;; Yeet the custom file to the magical land of /dev/zero
+(setq custom-file
+      (if (memq system-type '(gnu/linux
+			      darwin))
+	  "/dev/null" "NUL"))
 
-(dolist (module-extra dreameh--extra-modules)
-  (require module-extra))
+;; In noninteractive sessions, prioritize non-byte-compiled source files to
+;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
+;; to skip the mtime checks on every *.elc file.
+(setq load-prefer-newer t)
 
-(setq-default  frame-title-format '("Dreamomacs" " - " "%b"))
+;; Disable bidirectional text rendering for a modest performance boost. Of
+;; course, this renders Emacs unable to detect/display right-to-left languages
+;; (sorry!), but for us left-to-right language speakers/writers, it's a boon.
+(setq-default bidi-display-reordering 'left-to-right)
 
+;; Reduce rendering/line scan work for Emacs by not rendering cursors or regions
+;; in non-focused windows.
+(setq-default cursor-in-non-selected-windows nil)
+(setq highlight-nonselected-windows nil)
+
+;; By default, you must type "yes" when confirming destructive actions. Change that so only "y" is required.
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(org-babel-load-file (concat user-emacs-directory "config.org"))
 (provide 'init)
-;;; init.el ends here
+;;; init.el ends here.

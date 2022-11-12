@@ -7,6 +7,8 @@
 
 ;;; Code:
 ;; Defer gc further back in the startup process
+(defvar last-file-name-handler-alist file-name-handler-alist)
+(setq file-name-handler-alist nil)
 (setq gc-cons-threshold most-positive-fixnum)
 
 ;; Not enabling packages at startup for a good reason
@@ -18,7 +20,7 @@
 (setq frame-inhibit-implied-resize t)
 
 ;; Font
-(add-to-list 'default-frame-alist '(font . "Source Code Pro-12"))
+(add-to-list 'default-frame-alist '(font . "Jetbrains Mono-12"))
 
 ;; prevent un-styled emacs by disabling UI elements early.
 ;; Faster to disable these here (before they've been initialized)

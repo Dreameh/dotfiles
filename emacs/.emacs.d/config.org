@@ -1,0 +1,709 @@
+#+TITLE: TPHMacs Yoinked Edition
+#+AUTHOR Dreamboat
+#+STARTUP: overview indented align
+
+* Emacs
+Emacs settings to setup init & package installer.
+** Early Initialization
+  Turn off bytecompiler warnings
+  #+begin_src emacs-lisp
+    (setq comp-deferred-compilation-deny-list '())
+    (setq native-comp-async-report-warnings-errors nil)
+  #+end_src
+** Initialization
+ Add lexical binding support
+ Older versions of Emacs and those on Windows may have problems making secure remote connections due to [[https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341][this issue]].
+ #+BEGIN_SRC emacs-lisp
+   ;; -*- lexical-binding: t -*-
+   (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+ #+END_SRC
+
+Reload an open file from disk if it is changed outside of Emacs
+ #+begin_src emacs-lisp
+   (global-auto-revert-mode 1)
+ #+end_src
+*** Garbage Collection
+The setup special
+#+begin_src emacs-lisp
+;; Fix GC
+;; To speed up minibuffer commands (like helm and ivy), we defer garbage
+;; collection while the minibuffer is active.
+(defun drm-defer-garbage-collection-h ()
+  "Setting gc cons threshold to most positive fixnum."
+  (setq gc-cons-threshold most-positive-fixnum))
+
+(defun drm-restore-garbage-collection-h ()
+  "Defer it so that commands launched immediately after will enjoy the benefits."
+  (run-at-time
+   1 nil (lambda () (setq gc-cons-threshold 16777216))))
+
+(add-hook 'minibuffer-setup-hook #'drm-defer-garbage-collection-h)
+(add-hook 'minibuffer-exit-hook #'drm-restore-garbage-collection-h)
+
+;; Not restoring these to their defaults will cause stuttering/freezes.
+(add-hook 'emacs-startup-hook #'drm-restore-garbage-collection-h)
+
+;; In noninteractive sessions, prioritize non-byte-compiled source files to
+;; prevent the use of stale byte-code. Otherwise, it saves us a little IO time
+;; to skip the mtime checks on every *.elc file.
+(setq load-prefer-newer t)
+#+end_src
+** Package Installers
+   #+begin_src emacs-lisp
+     ;; Straight initialization
+     (defvar bootstrap-version)
+     (let ((bootstrap-file
+	    (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	   (bootstrap-version 5))
+       (unless (file-exists-p bootstrap-file)
+	 (with-current-buffer
+	     (url-retrieve-synchronously
+	      "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	      'silent 'inhibit-cookies)
+	   (goto-char (point-max))
+	   (eval-print-last-sexp)))
+       (load bootstrap-file nil 'nomessage))
+
+     ;; making straight-use-package look "better".
+     (setq straight-use-package-by-default t)
+     (setq use-package-always-defer t
+           use-package-verbose nil)
+     (setq package-enable-at-startup nil
+           package--init-file-ensured t)
+
+     (straight-use-package 'use-package)
+     (straight-use-package 'use-package-ensure-system-package)
+
+     (setq use-package-compute-statistics t)
+     (setq use-package-minimum-reported-time 0.01)
+
+     ;; And adding el-patch for easier access to github repositories
+     (straight-use-package 'el-patch)
+
+     ;; Loading no-littering before any other third-party package.
+     (use-package no-littering
+       :init
+       (require 'no-littering))
+     (use-package bind-key)
+   #+end_src
+
+** GPG Keys
+Update ELPA keyring.
+#+begin_src emacs-lisp
+  (use-package gnu-elpa-keyring-update)
+#+end_src
+* Look and Feel
+** Inhibit Stuff
+#+begin_src emacs-lisp
+  ;; Remove some of Emacs UI
+  (setq initial-scratch-message "") ; When opening a new buffer, don't show the scratch message.
+  (setq inhibit-startup-message t)
+  (setq inhibit-startup-echo-area-message t)
+  (setq ring-bell-function 'ignore)
+#+end_src
+** Blinking
+#+begin_src emacs-lisp
+  ;; Disable blinking cursor
+  (blink-cursor-mode -1)
+  (setq-default blink-cursor-delay 0)
+#+end_src
+** Ligatures
+#+begin_src emacs-lisp
+  (use-package ligature
+    :ensure t
+    :init (global-ligature-mode t)
+    :straight (ligature
+               :type git :host github
+               :repo "mickeynp/ligature.el")
+    :config
+    (ligature-set-ligatures 'prog-mode
+                            '("|||>" "<|||" "<==>" "<!--" "####" "~~>" "***" "||=" "||>"
+                              ":::" "::=" "=:=" "===" "==>" "=!=" "=>>" "=<<" "=/=" "!=="
+                              "!!." ">=>" ">>=" ">>>" ">>-" ">->" "->>" "-->" "---" "-<<"
+                              "<~~" "<~>" "<*>" "<||" "<|>" "<$>" "<==" "<=>" "<=<" "<->"
+                              "<--" "<-<" "<<=" "<<-" "<<<" "<+>" "</>" "###" "#_(" "..<"
+                              "..." "+++" "/==" "///" "_|_" "www" "&&" "^=" "~~" "~@" "~="
+                              "~>" "~-" "**" "*>" "*/" "||" "|}" "|]" "|=" "|>" "|-" "{|"
+                              "[|" "]#" "::" ":=" ":>" ":<" "$>" "==" "=>" "!=" "!!" ">:"
+                              ">=" ">>" ">-" "-~" "-|" "->" "--" "-<" "<~" "<*" "<|" "<:"
+                              "<$" "<=" "<>" "<-" "<<" "<+" "</" "#{" "#[" "#:" "#=" "#!"
+                              "##" "#(" "#?" "#_" "%%" ".=" ".." ".?" "+>" "++" "?:" "?="
+                              "?." "??" "/*" "/=" "/>" "//" "__" "~~" "(*" "*)" "\\\\"
+                              "://" ";;")))
+#+end_src
+** All the icons
+#+begin_src emacs-lisp
+  (use-package all-the-icons
+    :straight t
+    :config
+    (setq citar-symbols
+          `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
+            (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
+            (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
+    (setq citar-symbol-separator "  "))
+
+  (use-package treemacs-all-the-icons
+    :straight t
+    :after (all-the-icons treemacs)
+    :config (treemacs-load-theme "all-the-icons"))
+
+  (use-package all-the-icons-completion
+    :straight t
+    :after (all-the-icons)
+    :init (all-the-icons-completion-mode))
+#+end_src
+** Dashboard
+#+begin_src emacs-lisp
+  (defun my/dashboard-banner ()
+    """Set a dashboard banner including information on package initialization
+     time and garbage collections."""
+    (setq dashboard-banner-logo-title
+          (format "Emacs ready in %.2f seconds with %d garbage collections."
+                  (float-time (time-subtract after-init-time before-init-time)) gcs-done)))
+
+  (use-package dashboard
+    :defer nil
+    :if window-system
+    :init (dashboard-setup-startup-hook)
+    :custom
+    (dashboard-set-init-info nil)
+    (dashboard-center-content t)
+    (dasbhard-page-separator "\n\n")
+    (dashboard-set-heading-icons t)
+    (dashboard-startup-banner 'logo)
+    (dashboard-items '((projects . 5)
+                       (recents . 5))))
+#+end_src
+** Theme
+#+begin_src emacs-lisp
+  (use-package doom-themes
+    :if window-system
+    :config
+    (setq-default doom-moonlight-padded-modeline t)
+    :custom
+    (setq doom-themes-treemacs-theme "doom-colors")
+    (doom-themes-treemacs-config))
+
+  (load-theme 'doom-moonlight t)
+  (doom-themes-org-config)
+
+  (use-package hide-mode-line
+    :hook ((comint-mode help-mode) . hide-mode-line-mode))
+#+end_src
+** Modeline changes
+#+begin_src emacs-lisp
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode)
+  :init
+  (setq doom-modeline-buffer-file-name-style 'relative-to-project)
+  (custom-set-faces '(doom-modeline-eyebrowse ((t (:background "#cb619e" :inherit 'mode-line))))
+                    '(doom-modeline-inactive-bar ((t (:background "#cb619e" :inherit 'mode-line))))))
+#+end_src
+** Line number
+#+begin_src emacs-lisp
+  (global-display-line-numbers-mode)
+  (set-default 'display-line-numbers-type 't)
+  (setq display-line-numbers-current-absolute t)
+#+end_src
+** Todo Highlighting
+#+begin_src emacs-lisp
+  (use-package hl-todo
+    :hook (prog-mode . hl-todo-mode)
+    :config
+    (setq hl-todo-highlight-punctuation ":"
+          hl-todo-keyword-faces
+          `(("TODO"       warning bold)
+            ("FIXME"      error bold)
+            ("HACK"       font-lock-constant-face bold)
+            ("REVIEW"     font-lock-keyword-face bold)
+            ("NOTE"       success bold)
+            ("DEPRECATED" font-lock-doc-face bold))))
+#+end_src
+** Whitespace
+#+begin_src emacs-lisp
+ (setq whitespace-style '(face tabs tab-mark trailing))
+ (custom-set-faces
+	  '(whitespace-tab ((t (:foreground "#636363")))))
+ (setq whitespace-display-mappings
+	 '((tab-mark 9 [124 9] [92 9])))
+(global-whitespace-mode)
+#+end_src
+** HL Line
+#+begin_src emacs-lisp
+  (global-hl-line-mode t)
+  (global-prettify-symbols-mode t)
+#+end_src
+** Move Text
+#+begin_src emacs-lisp
+  (use-package move-text
+    :config (move-text-default-bindings))
+#+end_src
+** Ace Window
+#+begin_src emacs-lisp
+(use-package ace-window
+  :init
+  (progn
+    (global-set-key [remap other-window] 'ace-window)
+    (custom-set-faces
+     '(aw-leading-char-face
+       ((t (:inherit ace-jump-face-foreground :height 3.0)))))))
+#+end_src
+** Highlight Indentation
+#+begin_src emacs-lisp
+  (use-package highlight-indent-guides
+    :straight t
+    :hook (prog-mode . highlight-indent-guides-mode))
+#+end_src
+* Completion Framework
+#+begin_src emacs-lisp
+  (use-package helm
+    :bind (
+           ("C-c C-r" . helm-resume)
+           ("<f6>" . helm-resume)
+           ("M-x"  . helm-M-x)
+           ("C-x C-f" . helm-find-files)
+           ("<f1> f" . helm-describe-function)
+           ("<f1> v" . helm-describe-variable)
+           ("C-c k" . helm-ag)
+           ("C-x b" . helm-mini)
+           ("C-x l" . helm-locate))
+    :config
+    (helm-mode))
+
+  (use-package company)
+
+  (use-package avy
+    :bind ("M-s" . avy-goto-char))
+
+  (use-package helm-projectile
+    :init (helm-projectile-on)
+    :after (helm projectile)
+    :config
+    (defalias 'projectile-switch-to-buffer 'helm-projectile-switch-to-buffer)
+    (defalias 'projectile-find-dir 'helm-projectile-find-dir)
+    (defalias 'projectile-find-file 'helm-projectile-find-file)
+    (defalias 'projectile-grep 'helm-projectile-grep)
+    (defalias 'projectile-switch-project 'helm-projectile-switch-project))
+
+  (use-package bufler)
+
+  (use-package subword
+    :init (global-subword-mode))
+#+end_src
+* Version Control
+  [[https://github.com/magit/magit][Magit]] is a Git interface, just like you have in many IDEs and text editors, but combining that with all the power of using Git from the command line.
+  #+begin_src emacs-lisp
+    (use-package magit
+      :ensure-system-package (git)
+      :bind ("C-c g" . magit-status))
+
+    (use-package forge)
+
+    (use-package git-gutter
+      :hook (
+             (text-mode . git-gutter-mode)
+             (prog-mode . git-gutter-mode)
+             (conf-mode . git-gutter-mode))
+      :config (global-git-gutter-mode 't)
+      :diminish git-gutter-mode)
+
+    (use-package git-gutter+)
+
+    (use-package git-gutter-fringe)
+
+    (defconst fringe-size '4 "Default fringe width.")
+
+    ;;; Setting up the fringe
+    ;; switches order of fringe and margin
+    (setq-default fringes-outside-margins t)
+
+    ;; standardize fringe width
+    (fringe-mode fringe-size)
+    (push `(left-fringe  . ,fringe-size) default-frame-alist)
+    (push `(right-fringe . ,fringe-size) default-frame-alist)
+
+    ;; colored fringe "bars"
+    (define-fringe-bitmap 'git-gutter-fr:added
+      [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
+      nil nil 'center)
+    (define-fringe-bitmap 'git-gutter-fr:modified
+      [224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224 224]
+      nil nil 'center)
+    (define-fringe-bitmap 'git-gutter-fr:deleted
+      [0 0 0 0 0 0 0 0 0 0 0 0 0 128 192 224 240 248]
+      nil nil 'center)
+  #+end_src
+* Key bindings
+#+begin_src emacs-lisp
+  (global-unset-key (kbd "C-z"))
+#+end_src
+
+[[https://github.com/justbur/emacs-which-key][Which-key]] is a package that displays what bindings are available when you start pressing a key. It is incredibly useful, especially when you are new to Emacs or when you are trying a new package.
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :defer t
+    :init (which-key-mode)
+    :hook (lsp-mode . lsp-enable-which-key-integration))
+#+END_SRC
+#+begin_src emacs-lisp
+  (defun drm/edit-config ()
+    "Opens the configuration file in the current buffer."
+    (interactive)
+    (find-file (concat user-emacs-directory "config.org")))
+  (global-set-key (kbd "C-c e") 'drm/edit-config)
+#+end_src
+* Programming
+** General
+#+begin_src emacs-lisp
+  (use-package editorconfig
+    :defer nil
+    :init (editorconfig-mode 1))
+#+end_src
+
+Fixing indentation
+#+begin_src emacs-lisp
+  (setq-default tab-width 2
+                indent-tabs-mode nil
+                visual-line-mode t
+                transient-mark-mode t)
+#+end_src
+
+Sane defaults
+#+begin_src emacs-lisp
+  (setq-default require-final-newline t
+                vc-follow-symlinks t
+                fill-column 120)
+#+end_src
+
+
+Fixing the default line endings to be LF
+#+begin_src emacs-lisp
+  (setq-default buffer-file-coding-system 'utf-8-unix)
+#+end_src
+*** Parenthesis
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package smartparens
+  :hook (prog-mode . smartparens-mode)
+  :custom (sp-escape-quotes-after-insert nil)
+  :config (require 'smartparens-config))
+
+(setq show-paren-mode t)
+(add-hook 'prog-mode-hook 'show-paren-mode)
+#+end_src
+
+*** Projects
+  - https://github.com/bbatsov/projectile
+  - https://www.projectile.mx/en/latest/
+
+  Projectile gives Emacs project management features, such as navigating files, finding occurences of a string, running build commands and more.
+  It detects project folders through version control (git, svn, ...) and you can optionally give a default project folder path within the config.
+
+  #+begin_src emacs-lisp
+    (use-package projectile
+      :bind (:map projectile-mode-map
+		  ("C-c p" . projectile-command-map))
+      :custom
+      (projectile-project-search-path '("~/Projects/" "~/work/"))
+      (projectile-indexing-method 'hybrid)
+      (projectile-sort-order 'access-time)
+      (projectile-enable-caching t)
+      (projectile-require-project-root t)
+      (projectile-sort-order 'access-time)
+      :init (projectile-mode))
+  #+end_src
+
+Projectile helper
+#+begin_src emacs-lisp
+  (use-package counsel-projectile
+    :after (counsel projectile)
+    :init (counsel-projectile-mode)
+    :config
+    (defalias 'projectile-switch-to-buffer 'counsel-projectile-switch-to-buffer)
+    (defalias 'projectile-find-dir 'counsel-projectile-find-dir)
+    (defalias 'projectile-find-file 'counsel-projectile-find-file)
+    (defalias 'projectile-grep 'counsel-projectile-grep)
+    (defalias 'projectile-switch-project 'counsel-projectile-switch-project))
+#+end_src
+
+** Code completion
+*** Swiper
+  #+begin_src emacs-lisp
+    (use-package swiper-helm
+      :defer nil
+      :straight t
+      :config
+      (setq swiper-helm-display-function 'helm-default-display-buffer)
+      (progn
+        (helm-mode 1)
+        (global-set-key (kbd "C-s") 'swiper)))
+  #+end_src
+*** Yasnippet
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :hook ((prog-mode . yas-minor-mode)
+           (conf-mode . yas-minor-mode)
+           (text-mode . yas-minor-mode)
+           (snippet-mode . yas-minor-mode))
+    :bind ("C-ä" . company-yasnippet))
+
+  (use-package yasnippet-snippets
+    :after yasnippet)
+#+end_src
+** Language and debug servers
+[[https://microsoft.github.io/language-server-protocol][LSP]] is a protocol used to implement IDE-like features in an editor-agnostic manner. This package will give us a uniform way to add features such as semantic highlighting, auto-completion, jump-to-definition, and so on.
+  #+BEGIN_SRC emacs-lisp
+    (use-package lsp-mode
+      :commands lsp
+      :hook ((python-mode
+              java-mode) . lsp-deferred)
+      :custom
+      (add-hook 'java-mode-hook #'(lambda () (when (eq major-mode 'java-mode) (lsp-deferred))))
+      (lsp-auto-guess-root t)
+      (lsp-log-io t)
+      (lsp-prefer-flymake nil))
+  #+END_SRC
+
+This package enhances the user interface, providing pop-up windows with documentation and visual indicators.
+  #+BEGIN_SRC emacs-lisp
+    (use-package lsp-ui
+      :after (lsp)
+      :hook (lsp-after-open . lsp-ui-mode)
+      :init
+      (when (require 'xwidget nil 'noerror)
+	(setf lsp-ui-doc-use-webkit t))
+      :config
+      (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+      (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+      :custom
+      (lsp-ui-sideline-enable t)
+      (lsp-ui-doc-enable t)
+      (lsp-ui-doc-delay 0.2)
+      (lsp-ui-doc-position 'at-point)
+      (lsp-ui-doc-include-signature t)
+      (lsp-ui-doc-use-childframe t)
+      (lsp-ui-flycheck-enable t)
+      (lsp-ui-peek-enable t)
+      (lsp-ui-doc-show-with-cursor t)
+      (lsp-ui-peek-always-show t)
+      (lsp-ui-sideline-show-code-actions t))
+
+    (use-package company-lsp)
+  #+END_SRC
+
+Analogous to LSP is the [[https://microsoft.github.io/debug-adapter-protocol/][debug adapter protocol]]. We use [[https://github.com/emacs-lsp/lsp-treemacs][treemacs]] for IDE-like display of errors.
+  #+BEGIN_SRC emacs-lisp
+    (use-package dap-mode
+      :after lsp-mode
+      :config
+      (dap-mode t)
+      (dap-ui-mode t))
+
+    (use-package treemacs
+      :after lsp-mode
+      :bind (:map global-map
+                  ("C-x t t" . treemacs)
+                  ("C-x t 1" . treemacs-select-window)
+                  ("C-x t e" . lsp-treemacs-errors-list)
+                  ("C-x t s" . lsp-treemacs-symbols))
+      :custom
+      (treemacs-resize-icons 15))
+
+    (use-package lsp-treemacs
+      :init (lsp-treemacs-sync-mode 1))
+  #+END_SRC
+** Linters
+The two main frameworks that allow Emacs to interface with external linters are
+  - [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Flymake.html][flymake]]
+  - [[https://www.flycheck.org/en/latest/][flycheck]]
+A detailed comparison is at https://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html. We choose to use flycheck due to the sheer number of extensions written for it; pick your favorite language linter, and there’s probably a flycheck extension for it. Note that [[https://www.flycheck.org/en/latest/user/installation.html#windows-support][Windows isn't supported]].
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package flycheck
+      :hook (after-init . global-flycheck-mode)
+      :custom
+      (flycheck-check-syntax-automatically '(save mode-enabled)))
+
+    ;; Add buffer local Flycheck checkers after LSP for different major modes.
+    (defvar-local my-flycheck-local-cache nil)
+    (defun my-flycheck-local-checker-get (fn checker property)
+      ;; Only check the buffer local cache for the LSP checker, otherwise we get
+      ;; infinite loops.
+      (if (eq checker 'lsp)
+	  (or (alist-get property my-flycheck-local-cache)
+	      (funcall fn checker property))
+	(funcall fn checker property)))
+    (advice-add 'flycheck-checker-get
+		:around 'my-flycheck-local-checker-get)
+  #+END_SRC
+
+*** Documentation
+When the point is overlapping with a function call, eldoc shows the function arguments in the echo area.
+  #+BEGIN_SRC emacs-lisp
+  (use-package eldoc
+    :hook (after-init . global-eldoc-mode))
+  #+END_SRC
+** Java
+Java is a built-in mode, but its LSP and DAP interfaces are included separately from the main =lsp-mode= and =dap-mode=.
+#+BEGIN_SRC emacs-lisp
+    (use-package lsp-java
+      :config
+      (setq-default lsp-java-vmargs
+                    (list
+                     "-noverify"
+                     "-Xmx2G"
+                     "-Xms100m"
+                     "-Dsun.zip.disableMemoryMapping=true"
+                     "-XX:+UseG1GC"
+                     "-XX:AdaptiveSizePolicyWeight=90"
+                     "-XX:+UseStringDeduplication"
+                     "-javaagent:c:/Users/kyusa/lang-servers/lombok.jar"))
+      (setq lsp-java-format-on-type-enabled nil)
+      (setq lsp-sonarlint-java-enabled t)
+      (setq lsp-java-code-generation-to-string-code-style "STRING_BUILDER")
+      (setq lsp-java-code-generation-use-blocks t)
+      (setq lsp-java-implementations-code-lens-enabled t))
+#+END_SRC
+
+Maven
+#+begin_src emacs-lisp
+  (use-package mvn)
+#+end_src
+
+Helm LSP
+#+begin_src emacs-lisp
+  (use-package helm-lsp)
+#+end_src
+
+Java Checkstyle
+#+begin_src emacs-lisp
+  (flycheck-define-checker java-checkstyle
+    "Checkstyle for Java"
+    :enable t
+    :command (
+	      "java"
+	      "-jar" "c:/Users/kyusa/lang-servers/checkstyle-10.5-SNAPSHOT-all.jar"
+	      "-c"   "c:/Users/kyusa/lang-servers/docs/google_checks.xml"
+	      "-f" "xml" source)
+    :error-parser flycheck-parse-checkstyle
+    :modes (java-mode))
+#+end_src
+
+Sonarlint
+#+begin_src emacs-lisp
+  (use-package lsp-sonarlint)
+#+end_src
+
+Java Settings
+#+begin_src emacs-lisp
+  (defun my-java-mode-hook ()
+    "Adds stuff necessary for good java development"
+    (auto-fill-mode)
+    (flycheck-mode)
+    (git-gutter+-mode)
+    (subword-mode)
+    (yas-minor-mode)
+    (set-fringe-style '(8 . 0))
+    (lsp-lens-mode)
+    (lsp-java-boot-lens-mode)
+    (lambda () (require 'dap-java))
+    (lambda () (require 'lsp-java-boot))
+    (lambda () (require 'lsp-sonarlint))
+    ;; Define keybindings here for java..
+    )
+
+  (add-hook 'java-mode-hook 'my-java-mode-hook)
+  (add-hook 'lsp-managed-mode-hook
+            (lambda ()
+              (when (derived-mode-p 'java-mode)
+                (setq my-flycheck-local-cache '((next-checkers . (java-checkstyle)))))))
+#+end_src
+** Python
+   Unfortunately the Python package situation is a little confusing. There are a few older separate packages that provide a Python major mode, but we prefer the built-in one and avoid downloading a third-party one by not ensuring it. This allows us to have =use-package= configure Python mode without downloading anything.
+
+   #+BEGIN_SRC emacs-lisp
+   (use-package python
+     :ensure nil
+     :hook (python-mode . lsp)
+     :custom
+     (python-indent-guess-indent-offset-verbose nil)
+     (python-fill-docstring-style 'pep-257-nn))
+   #+END_SRC
+** Shell
+** Markup Langs
+#+begin_src emacs-lisp
+  (use-package markdown-mode :straight t)
+  (use-package flymd :straight t)
+  (setq nxml-child-indent 4)
+  (setq nxml-attribute-indent 4)
+#+end_src
+* Org
+#+begin_src emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :hook (org-mode . org-bullets-mode))
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; Required for proportional font
+  (use-package company-posframe
+    :config
+    (company-posframe-mode 1))
+
+  (setq org-startup-indented t)
+  (setq org-pretty-entities t)
+  (setq org-hide-emphasis-markers t)
+
+  (add-hook 'org-mode-hook 'visual-line-mode)
+  ;; (add-hook 'org-mode-hook 'variable-pitch-mode)
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) ""))))))
+#+end_src
+* Misc
+Helpful (is it like counsel?)
+#+begin_src emacs-lisp
+(use-package helpful
+  :straight t
+  :custom
+  (help-select-window t)
+  :bind
+  (("C-h f" . helpful-callable)
+   ("C-h v" . helpful-variable)
+   ("C-h k" . helpful-key)
+   ("C-h C-." . helpful-at-point)))
+#+end_src
+
+Keepass-mode for opening keepass database.
+#+begin_src emacs-lisp
+  (use-package keepass-mode)
+#+end_src
+** Terminal
+
+#+begin_src emacs-lisp
+  (setq eshell-prompt-regexp "^[^#$\n]*[#$] "
+        eshell-prompt-function
+        (lambda nil
+          (concat
+           "[" (user-login-name) "@" (system-name) " "
+           (if (string= (eshell/pwd) (getenv "HOME"))
+               "~" (eshell/basename (eshell/pwd)))
+           "]"
+           (if (= (user-uid) 0) "# " "$ "))))
+#+end_src
+
+For Linux, vterm is a perfectly fine terminal.
+#+begin_src emacs-lisp
+  (if (eq window-system "x")
+      (use-package vterm
+        :straight t
+        :when (and (executable-find "cmake")
+                   (executable-find "libtool"))
+        :config
+        (defalias 'ansi-term (lambda (&rest _) (call-interactively #'vterm)))
+        (setq vterm-shell (executable-find "bash")))
+    (message "vterm disabled for windows"))
+#+end_src
+
