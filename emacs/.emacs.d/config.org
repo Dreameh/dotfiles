@@ -149,8 +149,9 @@ Update ELPA keyring.
 
   (use-package all-the-icons-completion
     :straight t
-    :after (all-the-icons)
-    :init (all-the-icons-completion-mode))
+    :after (margnialia all-the-icons)
+    :init (all-the-icons-completion-mode)
+    :hook (marginalia-mode . all-the-icons-completion-marginalia-setup))
 #+end_src
 ** Dashboard
 #+begin_src emacs-lisp
@@ -256,34 +257,114 @@ Update ELPA keyring.
 #+end_src
 * Completion Framework
 #+begin_src emacs-lisp
-  (use-package helm
-    :bind (
-           ("C-c C-r" . helm-resume)
-           ("<f6>" . helm-resume)
-           ("M-x"  . helm-M-x)
-           ("C-x C-f" . helm-find-files)
-           ("<f1> f" . helm-describe-function)
-           ("<f1> v" . helm-describe-variable)
-           ("C-c k" . helm-ag)
-           ("C-x b" . helm-mini)
-           ("C-x l" . helm-locate))
-    :config
-    (helm-mode))
+      (use-package vertico
+        :defer nil
+        :straight (vertico
+                   :type git :host github
+                   :repo "minad/vertico")
+        :init (vertico-mode)
+        :bind (:map vertico-map
+                    ("C-n" . vertico-next)
+                    ("C-p" . vertico-previous)
+                    ("C-f" . vertico-exit)
+                    :map minibuffer-local-map
+                    ("M-h" . backward-kill-word))
+        :custom
+        (vertico-cycle t))
 
+      (use-package vertico-posframe
+        :init (vertico-posframe-mode))
+#+end_src
+
+Savehist
+#+begin_src emacs-lisp
+  (use-package savehist
+    :init (savehist-mode))
+#+end_src
+
+Orderless
+#+begin_src emacs-lisp
+  (defun prot-orderless-literal-dispatcher (pattern _index _total)
+    "Literal style dispatcher using the equals sign as a suffix.
+  It matches PATTERN _INDEX and _TOTAL according to how Orderless
+  parses its input."
+    (when (string-suffix-p "=" pattern)
+      `(orderless-literal . ,(substring pattern 0 -1))))
+  (use-package orderless
+    :config
+    (defun prot-orderless-literal-dispatcher (pattern _index _total)
+      "Literal style dispatcher using the equals sign as a suffix.
+  It matches PATTERN _INDEX and _TOTAL according to how Orderless
+  parses its input."
+      (when (string-suffix-p "=" pattern)
+        `(orderless-literal . ,(substring pattern 0 -1))))
+    :custom
+
+    (completion-styles '(orderless basic))      ; Use orderless
+    (completion-category-overrides
+     '((file (styles basic ; For `tramp' hostname completion with `vertico'
+                     partial-completion
+                     orderless))))
+    (orderless-component-separator 'orderless-escapable-split-on-space)
+    (orderless-matching-styles
+     '(orderless-literal
+       orderless-prefixes
+       orderless-initialism
+       orderless-regexp))
+    (orderless-style-dispatchers '(prot-orderless-literal-dispatcher)))
+#+end_src
+
+Consult
+#+begin_src emacs-lisp
+    (use-package consult
+       :hook (completion-list-mode . consult-preview-at-point-mode))
+    (use-package compat)
+    (use-package consult-dir)
+    (use-package consult-flycheck)
+    (use-package consult-projectile
+      :straight (consult-projectile
+                 :type git :host gitlab
+                 :repo "OlMon/consult-projectile" :branch "master")
+      :after (consult projectile)
+      :config
+      (defalias 'projectile-switch-to-buffer 'consult-projectile-switch-to-buffer)
+      (defalias 'projectile-find-dir 'consult-projectile-find-dir)
+      (defalias 'projectile-find-file 'consult-projectile-find-file)
+      (defalias 'projectile-grep 'consult-projectile-grep)
+      (defalias 'projectile-switch-project 'consult-projectile-switch-project))
+#+end_src
+
+Embark
+#+begin_src emacs-lisp
+  (use-package embark)
+  (use-package embark-consult
+    :after (embark consult)
+    :demand t ; only necessary if you have the hook below
+    ;; if you want to have consult previews as you move around an
+    ;; auto-updating embark collect buffer
+    :hook
+    (embark-collect-mode . consult-preview-at-point-mode))
+#+end_src
+
+
+Marginalia
+#+begin_src emacs-lisp
+    (use-package marginalia
+    :after vertico
+    :defer nil
+    :init (marginalia-mode)
+    :custom (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light))
+    :config
+    (setq marginalia-max-relative-age 0)
+    (setq marginalia-align 'right))
+#+end_src
+
+
+#+begin_src emacs-lisp
   (use-package company)
 
   (use-package avy
     :bind ("M-s" . avy-goto-char))
-
-  (use-package helm-projectile
-    :init (helm-projectile-on)
-    :after (helm projectile)
-    :config
-    (defalias 'projectile-switch-to-buffer 'helm-projectile-switch-to-buffer)
-    (defalias 'projectile-find-dir 'helm-projectile-find-dir)
-    (defalias 'projectile-find-file 'helm-projectile-find-file)
-    (defalias 'projectile-grep 'helm-projectile-grep)
-    (defalias 'projectile-switch-project 'helm-projectile-switch-project))
 
   (use-package bufler)
 
@@ -375,7 +456,6 @@ Sane defaults
                 fill-column 120)
 #+end_src
 
-
 Fixing the default line endings to be LF
 #+begin_src emacs-lisp
   (setq-default buffer-file-coding-system 'utf-8-unix)
@@ -393,7 +473,6 @@ Fixing the default line endings to be LF
 (setq show-paren-mode t)
 (add-hook 'prog-mode-hook 'show-paren-mode)
 #+end_src
-
 *** Projects
   - https://github.com/bbatsov/projectile
   - https://www.projectile.mx/en/latest/
@@ -429,17 +508,6 @@ Projectile helper
 #+end_src
 
 ** Code completion
-*** Swiper
-  #+begin_src emacs-lisp
-    (use-package swiper-helm
-      :defer nil
-      :straight t
-      :config
-      (setq swiper-helm-display-function 'helm-default-display-buffer)
-      (progn
-        (helm-mode 1)
-        (global-set-key (kbd "C-s") 'swiper)))
-  #+end_src
 *** Yasnippet
 #+begin_src emacs-lisp
   (use-package yasnippet
@@ -473,7 +541,7 @@ This package enhances the user interface, providing pop-up windows with document
       :hook (lsp-after-open . lsp-ui-mode)
       :init
       (when (require 'xwidget nil 'noerror)
-	(setf lsp-ui-doc-use-webkit t))
+        (setf lsp-ui-doc-use-webkit t))
       :config
       (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
       (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
@@ -546,7 +614,7 @@ When the point is overlapping with a function call, eldoc shows the function arg
     :hook (after-init . global-eldoc-mode))
   #+END_SRC
 ** Java
-Java is a built-in mode, but its LSP and DAP interfaces are included separately from the main =lsp-mode= and =dap-mode=.
+is a built-in mode, but its LSP and DAP interfaces are included separately from the main =lsp-mode= and =dap-mode=.
 #+BEGIN_SRC emacs-lisp
     (use-package lsp-java
       :config
@@ -572,10 +640,14 @@ Maven
   (use-package mvn)
 #+end_src
 
-Helm LSP
+Consult LSP
 #+begin_src emacs-lisp
-  (use-package helm-lsp)
+  (use-package consult-lsp
+    :after lsp
+    :config
+    (define-key lsp-mode-map [remap xref-find-apropos] #'consult-lsp-symbols))
 #+end_src
+
 
 Java Checkstyle
 #+begin_src emacs-lisp
@@ -584,8 +656,8 @@ Java Checkstyle
     :enable t
     :command (
 	      "java"
-	      "-jar" "c:/Users/kyusa/lang-servers/checkstyle-10.5-SNAPSHOT-all.jar"
-	      "-c"   "c:/Users/kyusa/lang-servers/docs/google_checks.xml"
+	      "-jar" "c:/Users/kyusa/lang-servers/checkstyle-8.14-all.jar"
+	      "-c"   "c:/Users/kyusa/lang-servers/docs/checkstyle.xml"
 	      "-f" "xml" source)
     :error-parser flycheck-parse-checkstyle
     :modes (java-mode))
@@ -641,6 +713,10 @@ Java Settings
 #+end_src
 * Org
 #+begin_src emacs-lisp
+  (use-package org-contrib
+    :after org)
+
+
   (use-package org-bullets
     :ensure t
     :hook (org-mode . org-bullets-mode))
